@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>All The Acronyms — Internet Acronym Dictionary</title>
+        <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <header class="site-header">
+        <h1>All The Acronyms</h1>
+        <p class="tagline">Dedicated to all the family IT support members who have to deal with that one guy going "What does that mean?"</p>
+    </header>
+
+    <main class="container">
+        <section class="controls">
+            <input id="search" type="search" placeholder="Search acronyms or definitions (e.g. WWW, URL, HTML)" aria-label="Search acronyms" />
+            <select id="filter" aria-label="Filter by tag">
+                <option value="">All categories</option>
+            </select>
+            <button id="random">Surprise me</button>
+        </section>
+
+        <section id="results" class="results" aria-live="polite"></section>
+    </main>
+
+    <footer class="site-footer">
+        <small>Built with ❤️ — Add an acronym by opening <code>script.js</code>.</small>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
