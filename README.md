@@ -3,9 +3,9 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Stack: HTML/CSS/JS](https://img.shields.io/badge/Stack-Vanilla%20JS%20%2F%20HTML5%20%2F%20CSS3-blue)](https://developer.mozilla.org/en-US/)
 
-> **Dedicated to all the family IT support members who have to deal with that one guy going** *"What does that mean?"*
+> **Dedicated to all the family IT support members who have to deal with that one guy going** *"What does that stand for?"*
 
-We've all been there. It's Thanksgiving, or a Sunday afternoon, or a random Tuesday night, and your phone buzzes. A family member just discovered a new term, or they are setting up a "smart toaster," or their browser cached something weird. Instead of spending your valuable free time explaining the nuance between **WWW** and the **Internet** for the fourteenth time, just send them here. 
+We've all been there. It's Thanksgiving, or a Sunday afternoon, or a random Tuesday night, and your phone buzzes. A family member just discovered a new term, or they are setting up a smart toaster, or their browser cached something weird. Instead of spending your valuable free time explaining the nuance between **WWW** and the **Internet** for the fourteenth time, just send them here. 
 
 **All The Acronyms** is a lightweight, zero-dependency, lightning-fast web dictionary built explicitly for the family IT hero. It houses clear, jargon-free definitions, concrete examples, and category filtering to help non-technical loved ones decipher the modern web without draining your sanity.
 
@@ -44,7 +44,7 @@ Host it for free so you have a quick link to fire off in the family group chat:
 2. Go to **Settings** > **Pages**.
 3. Under **Source**, select `Deploy from a branch`.
 4. Choose your branch (usually `main`) and folder (`/root`), then click **Save**.
-5. Your custom URL will be ready in under a minute!
+5. Your custom URL will be ready
 
 ---
 
