@@ -61,38 +61,70 @@ const resultsEl = document.getElementById('results');
 const searchEl = document.getElementById('search');
 const filterEl = document.getElementById('filter');
 const randomBtn = document.getElementById('random');
+const sentinelEl = document.getElementById('sentinel');
+
+// Infinite scroll state variables
+let filteredList = [];
+let currentIndex = 0;
+const ITEMS_PER_PAGE = 12; // Small chunks so ancient RAM doesn't choke
+let observer = null;
 
 function init(){
   populateFilter();
-  render(ACRONYMS);
+  onSearch(); // Initializes filteredList and triggers initial batch render
+  
   searchEl.addEventListener('input', onSearch);
   filterEl.addEventListener('change', onSearch);
   randomBtn.addEventListener('click', pickRandom);
+  
+  setupInfiniteScroll();
 }
 
 function populateFilter(){
   const tags = new Set();
-  ACRONYMS.forEach(x=> x.tags.forEach(t=>tags.add(t)));
-  Array.from(tags).sort().forEach(t=>{
-    const opt = document.createElement('option'); opt.value=t; opt.textContent = t; filterEl.appendChild(opt);
+  ACRONYMS.forEach(x => x.tags.forEach(t => tags.add(t)));
+  Array.from(tags).sort().forEach(t => {
+    const opt = document.createElement('option'); 
+    opt.value = t; 
+    opt.textContent = t; 
+    filterEl.appendChild(opt);
   });
 }
 
 function onSearch(){
   const q = searchEl.value.trim().toLowerCase();
   const f = filterEl.value;
-  const filtered = ACRONYMS.filter(item=>{
+  
+  // Filter master list down first
+  filteredList = ACRONYMS.filter(item => {
     if(f && !item.tags.includes(f)) return false;
     if(!q) return true;
     return item.a.toLowerCase().includes(q) || item.meaning.toLowerCase().includes(q) || item.desc.toLowerCase().includes(q);
   });
-  render(filtered);
+  
+  // Reset pagination state
+  resultsEl.innerHTML = '';
+  currentIndex = 0;
+  
+  if(filteredList.length === 0){ 
+    resultsEl.innerHTML = '<div class="empty">No results found.</div>'; 
+    sentinelEl.style.display = 'none';
+    return; 
+  }
+  
+  sentinelEl.style.display = 'block';
+  loadNextBatch();
 }
 
-function render(list){
-  resultsEl.innerHTML='';
-  if(list.length===0){ resultsEl.innerHTML = '<div class="empty">No results found.</div>'; return }
-  list.forEach(item=> resultsEl.appendChild(cardFor(item)));
+function loadNextBatch() {
+  if (currentIndex >= filteredList.length) {
+    sentinelEl.style.display = 'none'; // Everything loaded
+    return;
+  }
+  
+  const nextBatch = filteredList.slice(currentIndex, currentIndex + ITEMS_PER_PAGE);
+  nextBatch.forEach(item => resultsEl.appendChild(cardFor(item)));
+  currentIndex += ITEMS_PER_PAGE;
 }
 
 function cardFor(item){
@@ -110,13 +142,39 @@ function cardFor(item){
   return el;
 }
 
+function setupInfiniteScroll() {
+  // Use modern IntersectionObserver if available
+  if ('IntersectionObserver' in window) {
+    observer = new IntersectionObserver((entries) => {
+      if (entries[0].isIntersecting) {
+        loadNextBatch();
+      }
+    }, { rootMargin: '200px' });
+    
+    observer.observe(sentinelEl);
+  } else {
+    // Legacy fallback for older 2000s browsers (Windows XP/Pentium III)
+    window.addEventListener('scroll', () => {
+      if ((window.innerHeight + window.scrollY) >= document.documentElement.scrollHeight - 300) {
+        loadNextBatch();
+      }
+    });
+  }
+}
+
 function pickRandom(){
-  const idx = Math.floor(Math.random()*ACRONYMS.length);
+  const idx = Math.floor(Math.random() * ACRONYMS.length);
   const chosen = ACRONYMS[idx];
-  searchEl.value = chosen.a; onSearch();
-  // briefly highlight
-  const node = Array.from(resultsEl.children).find(n=> n.querySelector('h3')?.textContent===chosen.a);
-  if(node){ node.scrollIntoView({behavior:'smooth',block:'center'}); node.style.transition='box-shadow .35s'; node.style.boxShadow='0 0 0 3px rgba(6,182,212,0.15)'; setTimeout(()=>node.style.boxShadow='',800); }
+  searchEl.value = chosen.a; 
+  onSearch();
+  
+  const node = Array.from(resultsEl.children).find(n => n.querySelector('h3')?.textContent === chosen.a);
+  if(node){ 
+    node.scrollIntoView({behavior:'smooth', block:'center'}); 
+    node.style.transition='box-shadow .35s'; 
+    node.style.boxShadow='0 0 0 3px rgba(6,182,212,0.15)'; 
+    setTimeout(()=>node.style.boxShadow='', 800); 
+  }
 }
 
 document.addEventListener('DOMContentLoaded', init);
